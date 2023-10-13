@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.cart {
+    &_item-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        box-shadow: 10px 10px 20px white(0, 0, 0, 0.3);
+        margin: 30px;
+        background-color: white;
+    }
+
+    &_item {
+        padding: 10px;
+        text-align: center;
+    }
+
+    &_image{
+        width: 80px;
+        height: 80px;
+    }
+}

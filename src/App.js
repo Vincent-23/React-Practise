@@ -1,23 +1,51 @@
-import logo from './logo.svg';
+import React,{ useState, useContext } from 'react';
 import './App.css';
+import { MyContext } from './Context';
+import EmiCalculator from './components/EmiCalculator';
+import HomeComponent from './components/HomeComponent';
+import Layout from './components/Layout';
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  Routes
+} from "react-router-dom";
+import VideoGallery from './components/Video Gallery/VideoGallery';
+import Product from './components/Shopping Cart/Product';
+import ProductDetails from './components/Shopping Cart/ProductDetails';
+import Cart from './components/Shopping Cart/Cart';
+
 
 function App() {
+  const [emi, setEmi] = useState(0);
+  const [errorText, setErrorText] = useState("");
+  // const [breadcrumb, setBreadCrumb] = useState("");
+  const [productData, setProductData] = useState([]);
+  const {breadcrumb, setBreadCrumb} = useContext(MyContext);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <MyContext.Provider value={{emi, setEmi, errorText, setErrorText,breadcrumb, setBreadCrumb, productData, setProductData}}>
+       <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="/" element={<HomeComponent />} />
+            <Route path="emicalculator/*" element={<EmiCalculator />} />
+            <Route path="videogallery/*" element={<VideoGallery />} />
+            <Route path="/:id" element={<VideoGallery />} />
+            <Route path="product/*" element={<Product />} />
+            <Route path="/productDetails/:id" element={<ProductDetails />} />
+            <Route path="/cart/" element={<Cart />} />
+          </Route>
+          
+          {/* <Route path="users/*" element={<Users />} />
+          <Route path="users/*" element={<Users />} /> */}
+        </Routes>
+      </BrowserRouter>
+        {/* <Layout />
+        <EmiCalculator /> */}
+      </MyContext.Provider>
     </div>
   );
 }

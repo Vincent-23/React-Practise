@@ -1,0 +1,31 @@
+.home {
+    &__container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    &__item {
+        border: 1px solid white;
+        width: 250px;
+        height: 250px;
+        margin: 50px;
+        border-radius: 30px;
+        font-size: larger;
+        color: white;
+        text-align: center;
+        &:hover {
+            background-color: white;
+            color: black;
+            border: none;
+        }
+    }
+
+    &__icon-item{
+        // width: 30px;
+        // height: 30px;
+        // text-align: right;
+        padding-top: 70px;
+    }
+}
