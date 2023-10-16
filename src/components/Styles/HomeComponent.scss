@@ -1,18 +1,19 @@
 .home {
     &__container {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 10px;
         flex-wrap: wrap;
     }
 
     &__item {
         border: 1px solid white;
-        width: 250px;
-        height: 250px;
+        width: 200px;
+        height: 200px;
         margin: 50px;
         border-radius: 30px;
         font-size: larger;
+        font-weight: bolder;
         color: white;
         text-align: center;
         &:hover {

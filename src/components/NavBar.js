@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React,{ useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,27 +9,13 @@ import Button from '@mui/material/Button';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import './Styles/NavBar.scss';
-import { useNavigate } from 'react-router-dom';
 
 
 const NavBar = () => {
     let baseCls = 'navbar';
-    const pages = ['Home', 'Emi Calculator', 'Video Gallery', 'Shopping Cart'];
+    const pages = ['Home', 'Task', 'Emi Calculator', 'Video Gallery', 'Shopping Cart'];
     const navigate = useNavigate();
-        const SideBar = () => {
-        console.log('Clicl!')
-        return (
-        <div class="container">
-            <button onclick={() => toggleSidebar()}>Toggle Sidebar</button>
-            <div class="sidebar" id="sidebar">
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="#">Link 3</a>
-            </div>
-        </div>
-        )
-    }
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [badgeCount, setBadgeCount] = useState(0);
     const toggleSidebar = () => {
         const sidebar = document.getElementById('sidebar');
         if (sidebar.style.width === '250px') {
@@ -38,13 +25,13 @@ const NavBar = () => {
         }
       }
       
-      const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-      };
+     
       const handleNavigate = (route) => {
         switch (route) {
           case 'Home':
             return navigate('/');
+          case 'Task':
+            return navigate('/task');
           case 'Emi Calculator':
               return navigate('/emicalculator');
           case 'Video Gallery':
@@ -59,17 +46,18 @@ const NavBar = () => {
       const handleCart = () => {
         navigate('/cart/')
       }
+      useEffect(() => {
+        let cartDatas = JSON.parse(localStorage.getItem("User"));
+        setBadgeCount(cartDatas.length);
+    },[])
   return (
-    <div>
-        <Box sx={{ flexGrow: 1 }} className='appBar'>
+    <div className={`${baseCls}__container`}>
+        <Box sx={{ flexGrow: 1 }} className={`${baseCls}__appBar`}>
             <AppBar position="static" >
                 <Toolbar variant="dense">
                 <IconButton edge="start" onClick={() => toggleSidebar()} color="inherit" aria-label="menu" sx={{ mr: 2 }}>
                     <MenuIcon />
                 </IconButton>
-                {/* <Typography variant="h6" color="inherit" component="div">
-                    Home
-                </Typography> */}
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   {pages.map((page) => (
                     <Button
@@ -81,7 +69,7 @@ const NavBar = () => {
                     </Button>
                   ))}
                 </Box>
-                <IconButton
+                {/* <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -89,10 +77,10 @@ const NavBar = () => {
                 // onClick={handleMenu}
                 color="inherit"
               >
-                <Badge badgeContent={4} color="error" onClick={() => handleCart()}>
+                <Badge badgeContent={badgeCount} color="error" onClick={() => handleCart()}>
                   <ShoppingCartIcon />
                 </Badge>
-              </IconButton>
+              </IconButton> */}
 
                 {/* <SideBar /> */}
                 </Toolbar>

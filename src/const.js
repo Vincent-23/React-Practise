@@ -1,3 +1,7 @@
+export const TASK_TRACKER_TITLE = "Task Tracker";
+export const CALCULATE_TITLE = "Calculate";
+export const VIDEO_GALLERY = "Video Gallery";
+export const SHOPPING_CART = "Shopping Cart";
 export const TITLE = "EMI Calculator";
 export const CALCULATOR_VALUE = "Monthly EMI : Rs.";
 export const CALCULATOR_LOAN_AMOUNT = "Enter Loan Amount (INR):";

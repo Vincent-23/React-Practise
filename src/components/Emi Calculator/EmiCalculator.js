@@ -1,10 +1,10 @@
 import React,{ useState ,useContext } from 'react'
-import { MyContext } from '../Context';
+import { MyContext } from '../../Context';
 import { 
   TITLE,CALCULATOR_VALUE,CALCULATOR_LOAN_AMOUNT,
   CALCULATOR_MONTHLY_INTEREST_RATE,CALCULATOR_TENURE,
   CLEAR_TEXT, SUBMIT_TEXT, WARNING_TEXT
-} from '../const';
+} from '../../const';
 import './Styles/EmiCalculator.scss'
 
 const EmiCalculator = () => {

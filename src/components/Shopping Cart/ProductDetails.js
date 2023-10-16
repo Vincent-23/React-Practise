@@ -4,20 +4,21 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Rating from '@mui/material/Rating';
 import "./Styles/ProductDetails.scss";
 import { useParams, useNavigate } from "react-router-dom";
-// import { useEffect } from "react";
 
 const ProductDetails = () => {
   const baseCls = "product_detail";
 
+  const { id } = useParams();
+  var products =  useSelector((state) => state.product.products[0]);
   const navigate = useNavigate();
   const [cartProduct, setCartProduct] = useState([]);
-  // const [productData, setProductData] = useState([]);
-  const [productIndex, setProductIndex] = useState(0);
+  const [ productData, setProductData] = useState([]);
 
-  const { id } = useParams();
-  console.log("id!", id,products);
-  var products =  useSelector((state) => state.product.products[0]);
-  let productData = products?.filter((val) => val.id === parseInt(id))[0];
+  useEffect(() => {
+    let productValue = products?.filter((val) => val.id === parseInt(id))[0];
+    setProductData(productValue);
+    // setCartProduct((prevProduct) => [ ...prevProduct, productValue]);
+  },[products])
 
   const handleLimitDescription = (para) => {
     const maxLength = 100; // Maximum length for the description
@@ -35,7 +36,6 @@ const ProductDetails = () => {
     const max = 50; // Maximum value (exclusive)
 
     const randomValue = Math.floor(Math.random() * (max - min)) + min;
-    console.log("randomValue", randomValue);
     const originalPrice = (price * 100) / (100 - randomValue);
     return `₹${originalPrice.toFixed(2)}`;
   };
@@ -59,28 +59,32 @@ const ProductDetails = () => {
   };
 
   const handleCart = async (id) => {
-    let Obj = {
+    const Obj = {
       id: productData?.id,
+      title: productData?.title,
       description: productData?.description,
-      thumbnail: productData?.thumbnail,
-      rating: productData?.rating,
+      image: productData?.image,
+      rating: productData?.rating?.rate,
       price :productData?.price,
+      quantity:0
     }
-    console.log(cartProduct,checkIfIdExists(8))
-    // if(checkIfIdExists(id)){
-      await localStorage.setItem('User',JSON.stringify(Obj));
-      await setCartProduct({...cartProduct, productData});
-      navigate('/cart');
-    // }
-    
+    let cartDatas = JSON.parse(localStorage.getItem("User"));
+    let newCartProduct = [ ...cartProduct, Obj]
+    let removeDiplicate =  await newCartProduct.filter((item,index) => newCartProduct.findIndex((i) => i.id === item.id) === index);
+      await setCartProduct(removeDiplicate);
+      await navigate('/cart');
   }
-  console.log("product!",cartProduct);
+
+  useEffect(() => {
+    if(cartProduct) localStorage.setItem('User',JSON.stringify(cartProduct));
+  },[cartProduct]);
+
   return (
     <div className={`${baseCls}_container`}>
       <div className={`${baseCls}_item`}>
         <div className={`${baseCls}_item_image`}>
           <img className={`${baseCls}_image`}
-            src={productData?.thumbnail}
+            src={productData?.image}
           />
         </div>
       </div>
@@ -96,7 +100,7 @@ const ProductDetails = () => {
             <div className={`${baseCls}_rating_container`}>
               <div className={`${baseCls}_rating_item`}>{}</div>
               <div className={`${baseCls}_rating_item`}>
-                <Rating name="half-rating" defaultValue={productData?.rating} precision={0.5} />
+                <Rating name="half-rating" defaultValue={productData?.rating?.rate} precision={0.5} />
               </div>
             </div>
             <div className={`${baseCls}_price_container`}>

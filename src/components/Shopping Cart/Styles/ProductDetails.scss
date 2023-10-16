@@ -8,13 +8,18 @@ body {
     &_container {
       display: grid;
       grid-template-columns: auto auto auto;
-      gap: 10px;
+      gap:20px;
+    }
+
+    &_image {
+      height: 400px;
+      width: 500px;
+
     }
 
     &_item {
-      width: 500px;
       height: 400px;
-      padding: 10px;
+      padding: 20px;
       color: white;
 
       &_details, &_back-btn {
@@ -23,7 +28,7 @@ body {
 
       &_image {
         width: 500px;
-        height: 200px;
+        height: 100px;
         box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
       }
     }
@@ -34,12 +39,20 @@ body {
       background-color: orange;
       color: white;
       border: none;
+      border-radius: 30px;
       font-size: large;
+      margin-top: 10px;
       &:hover{
         background-color: white;
         color: orange;
         border: 1px solid orange;
       }
+    }
+
+    &_back-btn{
+      color: white;
+      padding-right: 30px;
+      font-size: 30px;
     }
   }
 

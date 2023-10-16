@@ -1,11 +1,10 @@
-import React, {useState,useRef} from 'react';
+import React, {useState} from 'react';
 import VideoSlider from './VideoSlider';
 import { useNavigate } from 'react-router-dom';
 import "./Styles/VideoGallery.scss";
 
 const VideoGallery = () => {
     let baseCls = 'video-gallery';
-    const videoRef = useRef(null);
     const [ toggle, setToggle ] = useState(false);
     const Navigate = useNavigate();
 
@@ -66,18 +65,6 @@ const VideoGallery = () => {
         }
     ]
 
-
-
-    // $(document).ready(function() {
-    //     $('.video-gallery').magnificPopup({
-    //     delegate: 'a', 
-    //     type: 'iframe',
-    //     gallery:{
-    //       enabled:true
-    //     }
-    //   });
-    //   });
-
     document.addEventListener('DOMContentLoaded', function() {
         const videoGallery = document.querySelectorAll('.video-gallery a');
       
@@ -105,7 +92,6 @@ const VideoGallery = () => {
       
 
     const handleRedirectSlider = (id) => {
-        console.log('click!')
         Navigate(`/${id}`)
         setToggle(true);
     }
@@ -131,7 +117,7 @@ const VideoGallery = () => {
                         </div>
                     </div>
                     </div>
-))}
+                ))}
                 </div>
                 
                 </div>

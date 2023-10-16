@@ -29,7 +29,6 @@ const VideoSlider = ({ VideoDatas, toggle, setToggle }) => {
         setSliderDatas(filterData);
     },[sliderIndex])
 
-console.log("slider!",sliderData?.url,sliderData,sliderIndex)
     const renderBackArrow = () => {
         return (
             <div className={`${baseCls}__container`}>
@@ -92,9 +91,6 @@ const Slider = () => {
     </div>
     )
 }
-
-    
-console.log('test!',VideoDatas[parseInt(sliderIndex)]?.url,parseInt(sliderIndex))
     return (
         <div>
           <Modal

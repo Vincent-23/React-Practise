@@ -1,29 +1,19 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import Layout from './Layout';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import { TASK_TRACKER_TITLE, CALCULATE_TITLE, VIDEO_GALLERY, SHOPPING_CART, } from "../const";
 import './Styles/HomeComponent.scss'
-import { useNavigate } from 'react-router-dom';
 
 const HomeComponent = () => {
     let baseCls = "home";
     const navigate = useNavigate();
-    const styles = {
-
-        largeIcon: {
-          width: 150,
-          height: 60,
-        },
-      
-      };
     const renderCalculateIcon = () => {
         return (
             <div className={`${baseCls}__icon-item`}>
-                {/* <IconButton aria-label="Example" size='large' classes={styles.largeIcon}> */}
-                    <CalculateIcon classes={`${baseCls}__icon`}  fontSize='large'/>
-                {/* </IconButton> */}
+                <CalculateIcon classes={`${baseCls}__icon`}  fontSize='large'/>
             </div>
         )
     }
@@ -32,6 +22,14 @@ const HomeComponent = () => {
         return (
             <div className={`${baseCls}__icon-item`}>
                 <PlayCircleIcon classes={`${baseCls}__icon`} fontSize='large'/>
+            </div>
+        )
+    }
+
+    const renderTaskIcon = () => {
+        return (
+            <div className={`${baseCls}__icon-item`}>
+                <AssignmentIcon classes={`${baseCls}__icon`} fontSize='large'/>
             </div>
         )
     }
@@ -50,27 +48,24 @@ const HomeComponent = () => {
 
   return (
     <div className={`${baseCls}__container`}>
+         <div className={`${baseCls}__item`} onClick={() => handleComponentRedirect("/task")}>
+            {renderTaskIcon()}
+            <h3>{ TASK_TRACKER_TITLE }</h3>
+        </div>
         <div className={`${baseCls}__item`} onClick={() => handleComponentRedirect("/emicalculator")}>
             {renderCalculateIcon()}
-            <h3>Calculate</h3>
+            <h3>{ CALCULATE_TITLE }</h3>
         </div>
         <div className={`${baseCls}__item`} onClick={() => handleComponentRedirect("/videogallery")}>
             {renderVideoGalleryIcon()}
-            <h3>Video Gallery</h3>
+            <h3>{ VIDEO_GALLERY }</h3>
         </div>
-        <div className={`${baseCls}__item`}>
+        <div className={`${baseCls}__item`} onClick={() => handleComponentRedirect("/product")}>
             {renderShoppingCartIcon()}
-            <h3>Shopping Cart</h3>
+            <h3>{ SHOPPING_CART }</h3>
         </div>
     </div>
   )
 }
-
-
-
-
-
-
-
 
 export default HomeComponent;

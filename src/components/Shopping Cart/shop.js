@@ -29,7 +29,6 @@ const Shop = () => {
     const max = 50; // Maximum value (exclusive)
 
     const randomValue = Math.floor(Math.random() * (max - min)) + min;
-    console.log("randomValue", randomValue);
     const originalPrice = (price * 100) / (100 - randomValue);
     return `₹${originalPrice.toFixed(2)}`;
   };
