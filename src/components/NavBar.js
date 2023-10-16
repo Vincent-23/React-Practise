@@ -48,7 +48,9 @@ const NavBar = () => {
       }
       useEffect(() => {
         let cartDatas = JSON.parse(localStorage.getItem("User"));
-        setBadgeCount(cartDatas.length);
+        let cartCount = cartDatas.length > 0 ? cartDatas.length : 0;
+        console.log('cartCount!',cartCount)
+        setBadgeCount(cartCount);
     },[])
   return (
     <div className={`${baseCls}__container`}>
