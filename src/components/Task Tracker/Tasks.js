@@ -1,8 +1,9 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { BsPlus } from "react-icons/bs";
 import { BiEdit, BiTask } from "react-icons/bi";
 import { AiFillCloseCircle, AiFillDelete } from "react-icons/ai";
 import { format } from "date-fns";
+import Table from '../../Table';
 
 export default function Tasks() {
   const [tasks, setTasks] = useState(
@@ -24,6 +25,99 @@ export default function Tasks() {
     updatedBy: "Vincent",
     assignee: "MYSELF",
   };
+
+  const columns = useMemo(
+    () => [
+      {
+        // First group columns
+        id: 'col11',
+        Header: "Details",
+        columns: [
+          {
+            Header: "No",
+            accessor: "id",
+          },
+          {
+            Header: "Date",
+            accessor: "date",
+          },
+          {
+            Header: "Task name",
+            accessor: "task",
+          },
+          {
+            Header: "Description",
+            accessor: "description",
+          },
+          {
+            Header: "Status",
+            accessor: "status",
+          },
+          {
+            Header: "Developed By",
+            accessor: "developedBy",
+          },
+          {
+            Header: "Updated By",
+            accessor: "updatedBy",
+          },
+          {
+            Header: "Assignee",
+            accessor: "assignee",
+          },
+          {
+            Header: "Edit",
+            Cell: info => (
+            <div className="text-xl flex items-center">
+          <button
+            className="mr-2"
+            onClick={() => {
+              console.log('info!',task, info.row, +info.row.values.id)
+              if (tasks.find((e) => e.id === +info.row.values.id)) {
+                setTask(tasks.find((e) => e.id === +info.row.values.id));
+                setShowPopUp(true);
+              }
+            }}
+          >
+            <BiEdit />
+          </button>
+          <button
+            className="bg-red-700 hover:bg-red-800 rounded-full p-1"
+            onClick={() => {
+              const id = tasks.find(
+                (e) => e.id === info.row.getValue("id")
+              )?.id;
+              if (
+                tasks.find((e) => e.id === info.row.getValue("id")) &&
+                window.confirm("Are you to sure to delete ? ")
+              )
+                setTasks(tasks.filter((each) => each.id !== id));
+            }}
+          >
+            <AiFillDelete className="text-white"/>
+          </button>
+        </div>)
+  
+          },
+          // {
+          //   Header: "Delete",
+          //   Cell: cell => (
+          //     <button
+          //       className="bg-red-700 rounded-full p-1"
+          //       onClick={() => {
+          //         if (window.confirm("Are you sure you want to delete ? "))
+          //           setTasks(tasks.filter((each) => each.id !== cell.id));
+          //       }}
+          //     >
+          //       <AiFillDelete />
+          //     </button>
+          //   )
+          // }
+        ],
+      },
+    ],
+    []
+  );
 
   const [task, setTask] = useState(defaultValue);
 
@@ -155,6 +249,28 @@ export default function Tasks() {
     )
   }
 
+  const renderTableKeyValue = () => {
+    let FinalData = 
+      tasks
+        // .map((e, i) => ({ ...e, id: i + 1 }))
+        // .sort((a, b) => b.id - a.id)
+        ?.map((e, i) => (
+           {
+            id: e.id,
+            description: e.description || "-",
+            task: e.task,
+            status: e.status === "ON-GOING" ? "On-going" : "Done",
+            developedBy: e.developedBy,
+            updatedBy: e.updatedBy,
+            assignee: e.assignee,
+            date: format(new Date(e.date), "dd, MMM : hh:mm a")
+           }
+        ))
+    return FinalData;
+  }
+
+  console.log('custom!',renderTableKeyValue())
+
   return (
     <div className="container mx-auto px-4">
       { showPopUp && addTaskModelPopUp()}
@@ -184,74 +300,8 @@ export default function Tasks() {
         </button>
       </div>
       <div className="bg-white grid-cols-none rounded-md overflow-hidden mt-5">
-        <table cellPadding={10} className="w-full ">
-          <thead class="bg-white">
-            <tr>
-              {/* <th></th> */}
-              <th>No</th>
-              <th>Date</th>
-              <th>Task name</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Developed By</th>
-              <th>Updated By</th>
-              <th>Assignee</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          {tasks
-            // .map((e, i) => ({ ...e, id: i + 1 }))
-            // .sort((a, b) => b.id - a.id)
-            ?.map((e, i) => (
-              <tr
-                onClick={() => {
-                  setTasks((tasks) =>
-                    tasks.map((each) =>
-                      e.id === each.id
-                        ? { ...each, checkStatus: !each.checkStatus }
-                        : each
-                    )
-                  );
-                }}
-                className="hover:bg-zinc-800 border-b-2 border-black cursor-pointer"
-              >
-                <td>{e.id}</td>
-                <td>{format(new Date(e.date), "dd, MMM : hh:mm a")}</td>
-                <td>{e.task || "-"}</td>
-                <td>
-                  <p title={e.description} className="max-w-[120px] truncate">
-                    {e.description || "-"}
-                  </p>
-                </td>
-                <td>{e.status === "ON-GOING" ? "On-going" : "Done"}</td>
-                <td>{e.developedBy}</td>
-                <td>{e.updatedBy}</td>
-                <td>{e.assignee}</td>
-                <td>
-                  <div className="text-xl flex items-center">
-                    <button
-                      className="mr-2"
-                      onClick={() => {
-                        setTask(e);
-                        setShowPopUp(true);
-                      }}
-                    >
-                      <BiEdit />
-                    </button>
-                    <button
-                      className="bg-red-700 rounded-full p-1"
-                      onClick={() => {
-                        if (window.confirm("Are you sure you want to delete ? "))
-                          setTasks(tasks.filter((each) => each.id !== e.id));
-                      }}
-                    >
-                      <AiFillDelete />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </table>
+        <Table columns={columns} data={renderTableKeyValue()} />
+        
       </div>
     </div>
   );

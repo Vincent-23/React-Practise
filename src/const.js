@@ -1,5 +1,5 @@
 export const TASK_TRACKER_TITLE = "Task Tracker";
-export const CALCULATE_TITLE = "Calculate";
+export const CALCULATE_TITLE = "Calculator";
 export const VIDEO_GALLERY = "Video Gallery";
 export const SHOPPING_CART = "Shopping Cart";
 export const TITLE = "EMI Calculator";

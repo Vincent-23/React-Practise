@@ -7,11 +7,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   width: 100%; /* Adjust dimensions as needed */
   height: 100%; /* Adjust dimensions as needed */
-  background-image: url('../public/blue.gif'); /* Replace with the path to your image */
   background-size: cover; /* Adjust background size properties */
   background-repeat: no-repeat; /* Adjust repeat properties */
+  background-color: black;
 }
-
+table {
+  width: 100%;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
