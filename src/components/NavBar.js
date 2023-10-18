@@ -48,7 +48,7 @@ const NavBar = () => {
       }
       useEffect(() => {
         let cartDatas = JSON.parse(localStorage.getItem("User"));
-        let cartCount = cartDatas.length > 0 ? cartDatas.length : 0;
+        let cartCount = cartDatas?.length > 0 ? cartDatas?.length : 0;
         console.log('cartCount!',cartDatas,typeof cartCount,typeof 1)
         setBadgeCount(cartCount);
     },[])

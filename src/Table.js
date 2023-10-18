@@ -1,63 +1,96 @@
-import React from 'react';
+import React, {useState} from 'react';
+import { format} from 'date-fns'
 import { useTable, usePagination, useRowSelect } from 'react-table'
+import {
+    createColumnHelper,
+    getCoreRowModel,
+    flexRender,
+    useReactTable,
+    getSortedRowModel,
+    SortingState,
+    PaginationState,
+    getPaginationRowModel,
+    sortingFns,
+    getFilteredRowModel,
+    getFacetedRowModel,
+    getFacetedUniqueValues,
+    getFacetedMinMaxValues,
+  } from "@tanstack/react-table";
+  import {
+    RankingInfo,
+    rankItem,
+    compareItems,
+  } from "@tanstack/match-sorter-utils";
 
-
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, tasks, setTasks, globalFilter, setGlobalFilter}) => {
+  const [ sorting, setSorting ] = useState([]);
+  const [filtering, setFiltering] = useState('')
     // Use the state and functions returned from useTable to build your UI
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      prepareRow,
-      page, // Instead of using 'rows', we'll use page,
-      // which has only the rows for the active page
+    // const {
+    //   getTableProps,
+    //   getTableBodyProps,
+    //   headerGroups,
+    //   prepareRow,
+    //   page, // Instead of using 'rows', we'll use page,
+    //   // which has only the rows for the active page
   
-      // The rest of these things are super handy, too ;)
-      canPreviousPage,
-      canNextPage,
-      pageOptions,
-      pageCount,
-      gotoPage,
-      nextPage,
-      previousPage,
-      getPageCount,
-      getState,
-      setPageSize,
-      selectedFlatRows,
-      setPageIndex,
-      getRowModel,
-      state: { pageIndex, pageSize, selectedRowIds },
-    } = useTable(
-      {
-        columns,
-        data,
+    //   // The rest of these things are super handy, too ;)
+    //   canPreviousPage,
+    //   canNextPage,
+    //   pageOptions,
+    //   pageCount,
+    //   gotoPage,
+    //   nextPage,
+    //   previousPage,
+    //   setPageSize,
+    //   selectedFlatRows,
+    //   state: { pageIndex, pageSize, selectedRowIds },
+    // } = useTable(
+    //   {
+    //     columns,
+    //     data,
+    //   },
+    //   usePagination,
+    //   useRowSelect,
+    //   hooks => {
+    //     hooks.visibleColumns.push(columns => [
+    //       // Let's make a column for selection
+    //       {
+    //         id: 'selection',
+    //         // The header can use the table's getToggleAllRowsSelectedProps method
+    //         // to render a checkbox
+    //         Header: ({ getToggleAllPageRowsSelectedProps }) => (
+    //           <div>
+    //             <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
+    //           </div>
+    //         ),
+    //         // The cell can use the individual row's getToggleRowSelectedProps method
+    //         // to the render a checkbox
+    //         Cell: ({ row }) => (
+    //           <div>
+    //             <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+    //           </div>
+    //         ),
+    //       },
+    //       ...columns,
+    //     ])
+    //   }
+    // )
+
+    const table = useReactTable({
+      data,
+      columns: columns,
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      state: {
+        sorting: sorting,
+        globalFilter: filtering,
       },
-      usePagination,
-      useRowSelect,
-      hooks => {
-        hooks.visibleColumns.push(columns => [
-          // Let's make a column for selection
-          {
-            id: 'selection',
-            // The header can use the table's getToggleAllRowsSelectedProps method
-            // to render a checkbox
-            Header: ({ getToggleAllPageRowsSelectedProps }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
-              </div>
-            ),
-            // The cell can use the individual row's getToggleRowSelectedProps method
-            // to the render a checkbox
-            Cell: ({ row }) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </div>
-            ),
-          },
-          ...columns,
-        ])
-      }
-    )
+      onSortingChange: setSorting,
+      onGlobalFilterChange: setFiltering,
+    })
 
     
 const IndeterminateCheckbox = React.forwardRef(
@@ -76,102 +109,107 @@ const IndeterminateCheckbox = React.forwardRef(
       )
     }
   )
+  const fuzzyFilter = (row, columnId, value, addMeta) => {
+    const itemRank = rankItem(row.getValue(columnId), value);
+    addMeta({
+      itemRank,
+    });
+    return itemRank.passed;
+  };
+
+  const reactTable = useReactTable({
+    data: tasks,
+    columns: columns,
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      sorting,
+      globalFilter,
+    },
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
+    },
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
+  });
+
+  
     // Render the UI for your table
     return (
       <>
-       
-        <table {...getTableProps()}>
+        {/* <pre>
+          <code>
+            {JSON.stringify(
+              {
+                pageIndex,
+                pageSize,
+                pageCount,
+                canNextPage,
+                canPreviousPage,
+              },
+              null,
+              2
+            )}
+          </code>
+        </pre> */}
+        <table>
           <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                ))}
-              </tr>
-            ))}
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                >
+                  {header.isPlaceholder ? null : (
+                    <div>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {
+                        { asc: '🔼', desc: '🔽' }[
+                          header.column.getIsSorted() ?? null
+                        ]
+                      }
+                    </div>
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
           </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  })}
-                </tr>
-              )
-            })}
+          <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
           </tbody>
         </table>
         {/* 
           Pagination can be built however you'd like. 
           This is just a very basic UI implementation:
         */}
-        <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          onClick={() => setPageIndex(0)}
-        //   disabled={!getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => previousPage()}
-        //   disabled={!getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => nextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => setPageIndex(getPageCount() - 1)}
-        >
-          {'>>'}
-        </button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {getState().pagination.pageIndex + 1} of{' '}
-            {getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            defaultValue={getState().pagination.pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              setPageIndex(page)
-            }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={getState().pagination.pageSize}
-          onChange={e => {
-            setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map(pageSize => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>{getRowModel().rows.length} Rows</div>
-      
-    {/* </div> */}
+        
       </>
     )
   }
 
-  export default Table;
+  export default Table
   

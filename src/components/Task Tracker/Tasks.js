@@ -4,6 +4,14 @@ import { BiEdit, BiTask } from "react-icons/bi";
 import { AiFillCloseCircle, AiFillDelete } from "react-icons/ai";
 import { format } from "date-fns";
 import Table from '../../Table';
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 
 export default function Tasks() {
   const [tasks, setTasks] = useState(
@@ -11,9 +19,12 @@ export default function Tasks() {
       ? JSON.parse(localStorage.getItem("tasks"))
       : []
   );
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   const [showPopUp, setShowPopUp] = useState(false);
   const [sortOrder, setSortOrder] = useState(false);
+  const [sorting, setSorting] = React.useState([]);
+
 
   const defaultValue = {
     checkStatus: false,
@@ -26,98 +37,79 @@ export default function Tasks() {
     assignee: "MYSELF",
   };
 
-  const columns = useMemo(
-    () => [
-      {
-        // First group columns
-        id: 'col11',
-        Header: "Details",
-        columns: [
-          {
-            Header: "No",
-            accessor: "id",
-          },
-          {
-            Header: "Date",
-            accessor: "date",
-          },
-          {
-            Header: "Task name",
-            accessor: "task",
-          },
-          {
-            Header: "Description",
-            accessor: "description",
-          },
-          {
-            Header: "Status",
-            accessor: "status",
-          },
-          {
-            Header: "Developed By",
-            accessor: "developedBy",
-          },
-          {
-            Header: "Updated By",
-            accessor: "updatedBy",
-          },
-          {
-            Header: "Assignee",
-            accessor: "assignee",
-          },
-          {
-            Header: "Edit",
-            Cell: info => (
-            <div className="text-xl flex items-center">
-          <button
-            className="mr-2"
-            onClick={() => {
-              console.log('info!',task, info.row, +info.row.values.id)
-              if (tasks.find((e) => e.id === +info.row.values.id)) {
-                setTask(tasks.find((e) => e.id === +info.row.values.id));
-                setShowPopUp(true);
-              }
-            }}
-          >
-            <BiEdit />
-          </button>
-          <button
-            className="bg-red-700 hover:bg-red-800 rounded-full p-1"
-            onClick={() => {
-              const id = tasks.find(
-                (e) => e.id === info.row.getValue("id")
-              )?.id;
-              if (
-                tasks.find((e) => e.id === info.row.getValue("id")) &&
-                window.confirm("Are you to sure to delete ? ")
-              )
-                setTasks(tasks.filter((each) => each.id !== id));
-            }}
-          >
-            <AiFillDelete className="text-white"/>
-          </button>
-        </div>)
-  
-          },
-          // {
-          //   Header: "Delete",
-          //   Cell: cell => (
-          //     <button
-          //       className="bg-red-700 rounded-full p-1"
-          //       onClick={() => {
-          //         if (window.confirm("Are you sure you want to delete ? "))
-          //           setTasks(tasks.filter((each) => each.id !== cell.id));
-          //       }}
-          //     >
-          //       <AiFillDelete />
-          //     </button>
-          //   )
-          // }
-        ],
-      },
-    ],
-    []
-  );
+  const columns = [
+
+    {
+
+        accessorKey : 'date',
+
+        header: "DATE",
+
+        cell:(props)=>{console.log('props!',props); return (<p>{format(new Date(props.getValue().date), "dd-MMM-yyyy  hh:mm a") }</p>)}
+
+    },
+
+    {
+
+        accessorKey : 'task',
+
+        header: "TASK",
+
+        cell:(props)=><p>{props.getValue() || '-'}</p>
+
+    },
+
+    {
+
+        accessorKey : 'description',
+
+        header: "Description",
+
+        cell:(props)=><p>{props.getValue() || '-'}</p>
+
+    },
+
+    {
+
+        accessorKey : 'status',
+
+        header: "STATUS",
+
+        cell:(props)=><p>{props.getValue() || '-'}</p>
+
+    },
+
+    {
+
+        accessorKey : 'developedBy',
+
+        header: "Developed By",
+
+        cell:(props)=><p>{props.getValue() || '-'}</p>
+
+    },
+
+    {
+
+        accessorKey : 'updatedAt',
+
+        header: "Updated At",
+
+        cell:(props)=><p>{format(new Date(props.getValue()), "dd-MMM-yyyy  hh:mm a") }</p>
+
+    },
+
+    {
+
+        accessorKey : 'assignee',
+
+        header: "Assignee",
+
+        cell:(props)=><p>{props.getValue() || '-'}</p>
+
+    },
+
+]
 
   const [task, setTask] = useState(defaultValue);
 
@@ -269,6 +261,8 @@ export default function Tasks() {
     return FinalData;
   }
 
+  const datas = useMemo(() => renderTableKeyValue(),[])
+
   console.log('custom!',renderTableKeyValue())
 
   return (
@@ -280,7 +274,7 @@ export default function Tasks() {
             <h1>Task Management</h1>
           </div>
         </div>
-        <button
+        {/* <button
           onClick={() => {
             setSortOrder(!sortOrder);
             handleSortTaskValue();
@@ -288,7 +282,7 @@ export default function Tasks() {
           className="bg-white text-black hover:bg-zinc-300 flex items-end px-4 w-32 py-1 rounded-full mt-5 font-bold text-md"
         >
           <p>{`Sort :${' '} ${sortOrder ? 'Asc' : 'Desc'}`}</p>
-        </button>
+        </button> */}
         <button
           onClick={() => {
             setShowPopUp(!showPopUp);
@@ -300,7 +294,7 @@ export default function Tasks() {
         </button>
       </div>
       <div className="bg-white grid-cols-none rounded-md overflow-hidden mt-5">
-        <Table columns={columns} data={renderTableKeyValue()} />
+        <Table columns={columns} data={datas} tasks={tasks} setTasks={setTasks} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} sorting={sorting} setSorting={setSorting}/>
         
       </div>
     </div>
