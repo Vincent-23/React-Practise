@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTable, usePagination, useSortBy } from 'react-table'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ImportExportIcon from '@mui/icons-material/ImportExport';
 import SortIcon from "../Icons/SortIcon";
-import { Box, Button, ButtonGroup, Icon, Text } from "@chakra-ui/react";
 
 
 
@@ -25,28 +25,27 @@ const Table = ({ table }) => {
           <tr key={headerGroup.id} className='bg-gray-700'>
             {headerGroup.headers.map((header) => (
               <th w={header.getSize()} key={header.id} className='text-white p-3'>
-                {header.column.columnDef.header}
-                {header.column.getCanSort() && (
-                  <Icon
-                    as={SortIcon}
-                    mx={3}
-                    fontSize={14}
-                    onClick={header.column.getToggleSortingHandler()}
-                  />
-                )}
-                {/* {
-                  {
-                    asc: " 🔼",
-                    desc: " 🔽",
-                  }[header.column.getIsSorted()]
-                } */}
-                <Box
-                  onMouseDown={header.getResizeHandler()}
-                  onTouchStart={header.getResizeHandler()}
-                  className={`resizer ${
-                    header.column.getIsResizing() ? "isResizing" : ""
-                  }`}
-                />
+                <div className='flex'>
+                  {header.column.columnDef.header}
+                  {header.column.getCanSort() && (
+                    <div
+                      onClick={header.column.getToggleSortingHandler()}
+                    ><ImportExportIcon /></div>
+                  )}
+                  {/* {
+                    {
+                      asc: " 🔼",
+                      desc: " 🔽",
+                    }[header.column.getIsSorted()]
+                  } */}
+                  {/* <Box
+                    onMouseDown={header.getResizeHandler()}
+                    onTouchStart={header.getResizeHandler()}
+                    className={`resizer ${
+                      header.column.getIsResizing() ? "isResizing" : ""
+                    }`}
+                  /> */}
+                </div>
               </th>
             ))}
           </tr>
