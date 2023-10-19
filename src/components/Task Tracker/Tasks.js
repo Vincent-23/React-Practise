@@ -24,6 +24,8 @@ export default function Tasks() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [sortOrder, setSortOrder] = useState(false);
   const [sorting, setSorting] = React.useState([]);
+  const [data, setData] = useState([]);
+
 
 
   const defaultValue = {
@@ -57,96 +59,45 @@ export default function Tasks() {
       cell: (props) => <p>{props.getValue() || '-'}</p>
     },
     {
+
       accessorKey: 'status',
+
       header: "STATUS",
+
       cell: (props) => <p>{props.getValue() || '-'}</p>
+
     },
 
     {
+
       accessorKey: 'developedBy',
+
       header: "Developed By",
+
       cell: (props) => <p>{props.getValue() || '-'}</p>
+
     },
 
     {
+
       accessorKey: 'updatedBy',
+
       header: "Updated By",
       cell: (props) => <p>{props.getValue() || '-'}</p>
+
       // cell: (props) => <p>{format(new Date(props.getValue()), "dd-MMM-yyyy  hh:mm a")}</p>
+
     },
 
     {
+
       accessorKey: 'assignee',
+
       header: "Assignee",
+
       cell: (props) => <p>{props.getValue() || '-'}</p>
+
     },
-    {
-      // accessorKey: 'assignee',
-      header: "Action",
-      cell: (info) => (
-        <div className="text-xl flex items-center">
-          <button
-            className="mr-2"
-            onClick={() => {
-              console.log('info!',info.row.original)
-              if (tasks.find((e) => e.id === +info.row.original.id)) {
-                setTask(tasks.find((e) => e.id === +info.row.original.id));
-                setShowPopUp(true);
-              }
-            }}
-          >
-            <BiEdit />
-          </button>
-          <button
-            className="bg-red-700 hover:bg-red-800 rounded-full p-1"
-            onClick={() => {
-              const id = tasks.find(
-                (e) => e.id === +info.row.original.id
-              )?.id;
-              if (
-                tasks.find((e) => e.id === +info.row.original.id) &&
-                window.confirm("Are you sure you want to delete ? ")
-              )
-                setTasks(tasks.filter((each) => each.id !== id));
-            }}
-          >
-            <AiFillDelete />
-          </button>
-        </div>
-      ),    }
-    // columnHelper.accessor("action", {
-    //   header: "Action",
-    //   cell: (info) => (
-    //     <div className="text-xl flex items-center">
-    //       <button
-    //         className="mr-2"
-    //         onClick={() => {
-    //           if (tasks.find((e) => e.id === info.row.getValue("id"))) {
-    //             setTask(tasks.find((e) => e.id === info.row.getValue("id")));
-    //             setShowPopUp(true);
-    //           }
-    //         }}
-    //       >
-    //         <BiEdit />
-    //       </button>
-    //       <button
-    //         className="bg-red-700 hover:bg-red-800 rounded-full p-1"
-    //         onClick={() => {
-    //           const id = tasks.find(
-    //             (e) => e.id === info.row.getValue("id")
-    //           )?.id;
-    //           if (
-    //             tasks.find((e) => e.id === info.row.getValue("id")) &&
-    //             window.confirm("Are you to sure to delete ? ")
-    //           )
-    //             setTasks(tasks.filter((each) => each.id !== id));
-    //         }}
-    //       >
-    //         <AiFillDelete />
-    //       </button>
-    //     </div>
-    //   ),
-    // }),
   ];
 
   const [task, setTask] = useState(defaultValue);
@@ -230,7 +181,7 @@ export default function Tasks() {
             <input
               onChange={(e) => handleOnChange(e)}
               value={task.task}
-              className=" rounded-md px-3 py-2 mt-2 text-black border border-black"
+              className=" rounded-md px-3 py-2 mt-2 text-black border-black"
               placeholder="Task Name."
               type="text"
               name="task"
@@ -242,7 +193,7 @@ export default function Tasks() {
               onChange={(e) => handleOnChange(e)}
               value={task.description}
               rows={5}
-              className="rounded-md px-3 py-2 mt-2 text-black border border-black"
+              className="rounded-md px-3 py-2 mt-2 text-black"
               placeholder="Description."
               type="text"
               name="description"
@@ -252,7 +203,7 @@ export default function Tasks() {
             <input
               onChange={(e) => handleOnChange(e)}
               value={task.developedBy}
-              className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black border border-black"
+              className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black"
               placeholder="Task Name."
               type="text"
               name="developedBy"
@@ -262,7 +213,7 @@ export default function Tasks() {
             <input
               onChange={(e) => handleOnChange(e)}
               value={task.assignee}
-              className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black border border-black"
+              className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black"
               placeholder="Task Name."
               type="text"
               name="assignee"
@@ -300,6 +251,31 @@ export default function Tasks() {
   }
 
   const datas = useMemo(() => renderTableKeyValue(), [])
+  const table = useReactTable({
+    data: datas,
+    columns,
+    // state: {
+    //   columnFilters,
+    // },
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    columnResizeMode: "onChange",
+    meta: {
+      updateData: (rowIndex, columnId, value) =>
+        setData((prev) =>
+          prev.map((row, index) =>
+            index === rowIndex
+              ? {
+                  ...prev[rowIndex],
+                  [columnId]: value,
+                }
+              : row
+          )
+        ),
+    },
+  });
 
   console.log('custom!', renderTableKeyValue())
 
@@ -332,8 +308,27 @@ export default function Tasks() {
         </button>
       </div>
       <div className="bg-white grid-cols-none rounded-md overflow-hidden mt-5">
-        <Table columns={columns} datas={datas} />
-
+        <Table table={table} />
+      </div>
+      <div>
+      <p mb={2}>
+        Page {table.getState().pagination.pageIndex + 1} of{" "}
+        {table.getPageCount()}
+      </p>
+      <div>
+      <button
+          onClick={() => table.previousPage()}
+          isDisabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <button
+          onClick={() => table.nextPage()}
+          isDisabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+      </div>
       </div>
     </div>
   );
