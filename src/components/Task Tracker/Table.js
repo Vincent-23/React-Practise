@@ -22,9 +22,12 @@ import {
 const Table = ({ columns, datas }) => {
   const [sorting, setSorting] = useState([]);
   const [filtering, setFiltering] = useState('')
-  const [data, setData] = useState(datas);
+  const [data, setData] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
 
+  useEffect(() => {
+    setData(datas);
+  },[datas])
   // Use the state and functions returned from useTable to build your UI
   // const {
   //   getTableProps,
