@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTable, usePagination, useSortBy } from 'react-table'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Box, Button, ButtonGroup, Icon, Text } from "@chakra-ui/react";
 import SortIcon from "../Icons/SortIcon";
 
 
@@ -139,14 +138,14 @@ const Table = ({ columns, datas }) => {
             {headerGroup.headers.map((header) => (
               <th className="th" w={header.getSize()} key={header.id}>
                 {header.column.columnDef.header}
-                {header.column.getCanSort() && (
-                  <Icon
-                    as={SortIcon}
-                    mx={3}
-                    fontSize={14}
-                    onClick={header.column.getToggleSortingHandler()}
-                  />
-                )}
+                {/* {header.column.getCanSort() && (
+                  // <Icon
+                  //   as={SortIcon}
+                  //   mx={3}
+                  //   fontSize={14}
+                  //   onClick={header.column.getToggleSortingHandler()}
+                  // />
+                )} */}
                 {
                   {
                     asc: <ArrowDropUpIcon />,
@@ -176,24 +175,24 @@ const Table = ({ columns, datas }) => {
           </tr>
         ))}
         </tbody>
-        <Text mb={2}>
+        <p mb={2}>
         Page {table.getState().pagination.pageIndex + 1} of{" "}
         {table.getPageCount()}
-      </Text>
-      <ButtonGroup size="sm" isAttached variant="outline">
-        <Button
+      </p>
+      <div>
+      <button
           onClick={() => table.previousPage()}
           isDisabled={!table.getCanPreviousPage()}
         >
           {"<"}
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={() => table.nextPage()}
           isDisabled={!table.getCanNextPage()}
         >
           {">"}
-        </Button>
-      </ButtonGroup>
+        </button>
+      </div>
       </table>
       {/* 
           Pagination can be built however you'd like. 
