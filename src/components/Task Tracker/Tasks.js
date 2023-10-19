@@ -3,7 +3,7 @@ import { BsPlus } from "react-icons/bs";
 import { BiEdit, BiTask } from "react-icons/bi";
 import { AiFillCloseCircle, AiFillDelete } from "react-icons/ai";
 import { format } from "date-fns";
-import Table from '../../Table';
+import Table from './Table';
 import {
   flexRender,
   getCoreRowModel,
@@ -28,7 +28,7 @@ export default function Tasks() {
 
   const defaultValue = {
     checkStatus: false,
-    date: new Date(),
+    // date: new Date(),
     task: "",
     description: "",
     status: "ON-GOING",
@@ -38,78 +38,116 @@ export default function Tasks() {
   };
 
   const columns = [
-
+    // {
+    //   accessorKey: "date",
+    //   header: "Date",
+    //   size: 225,
+    //   cell: (props) => { console.log('props!', props); return (<p>{format(new Date(props.getValue().date), "dd-MMM-yyyy  hh:mm a")}</p>) },
+    //   enableColumnFilter: true,
+    //   filterFn: "includesString",
+    // },
     {
-
-        accessorKey : 'date',
-
-        header: "DATE",
-
-        cell:(props)=>{console.log('props!',props); return (<p>{format(new Date(props.getValue().date), "dd-MMM-yyyy  hh:mm a") }</p>)}
-
+      accessorKey: "task",
+      header: "Task",
+      cell: (props) => <p>{props.getValue() || '-'}</p>,
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: (props) => <p>{props.getValue() || '-'}</p>
+    },
+    {
+      accessorKey: 'status',
+      header: "STATUS",
+      cell: (props) => <p>{props.getValue() || '-'}</p>
     },
 
     {
-
-        accessorKey : 'task',
-
-        header: "TASK",
-
-        cell:(props)=><p>{props.getValue() || '-'}</p>
-
+      accessorKey: 'developedBy',
+      header: "Developed By",
+      cell: (props) => <p>{props.getValue() || '-'}</p>
     },
 
     {
-
-        accessorKey : 'description',
-
-        header: "Description",
-
-        cell:(props)=><p>{props.getValue() || '-'}</p>
-
+      accessorKey: 'updatedBy',
+      header: "Updated By",
+      cell: (props) => <p>{props.getValue() || '-'}</p>
+      // cell: (props) => <p>{format(new Date(props.getValue()), "dd-MMM-yyyy  hh:mm a")}</p>
     },
 
     {
-
-        accessorKey : 'status',
-
-        header: "STATUS",
-
-        cell:(props)=><p>{props.getValue() || '-'}</p>
-
+      accessorKey: 'assignee',
+      header: "Assignee",
+      cell: (props) => <p>{props.getValue() || '-'}</p>
     },
-
     {
-
-        accessorKey : 'developedBy',
-
-        header: "Developed By",
-
-        cell:(props)=><p>{props.getValue() || '-'}</p>
-
-    },
-
-    {
-
-        accessorKey : 'updatedAt',
-
-        header: "Updated At",
-
-        cell:(props)=><p>{format(new Date(props.getValue()), "dd-MMM-yyyy  hh:mm a") }</p>
-
-    },
-
-    {
-
-        accessorKey : 'assignee',
-
-        header: "Assignee",
-
-        cell:(props)=><p>{props.getValue() || '-'}</p>
-
-    },
-
-]
+      // accessorKey: 'assignee',
+      header: "Action",
+      cell: (info) => (
+        <div className="text-xl flex items-center">
+          <button
+            className="mr-2"
+            onClick={() => {
+              console.log('info!',info.row.original)
+              if (tasks.find((e) => e.id === +info.row.original.id)) {
+                setTask(tasks.find((e) => e.id === +info.row.original.id));
+                setShowPopUp(true);
+              }
+            }}
+          >
+            <BiEdit />
+          </button>
+          <button
+            className="bg-red-700 hover:bg-red-800 rounded-full p-1"
+            onClick={() => {
+              const id = tasks.find(
+                (e) => e.id === +info.row.original.id
+              )?.id;
+              if (
+                tasks.find((e) => e.id === +info.row.original.id) &&
+                window.confirm("Are you sure you want to delete ? ")
+              )
+                setTasks(tasks.filter((each) => each.id !== id));
+            }}
+          >
+            <AiFillDelete />
+          </button>
+        </div>
+      ),    }
+    // columnHelper.accessor("action", {
+    //   header: "Action",
+    //   cell: (info) => (
+    //     <div className="text-xl flex items-center">
+    //       <button
+    //         className="mr-2"
+    //         onClick={() => {
+    //           if (tasks.find((e) => e.id === info.row.getValue("id"))) {
+    //             setTask(tasks.find((e) => e.id === info.row.getValue("id")));
+    //             setShowPopUp(true);
+    //           }
+    //         }}
+    //       >
+    //         <BiEdit />
+    //       </button>
+    //       <button
+    //         className="bg-red-700 hover:bg-red-800 rounded-full p-1"
+    //         onClick={() => {
+    //           const id = tasks.find(
+    //             (e) => e.id === info.row.getValue("id")
+    //           )?.id;
+    //           if (
+    //             tasks.find((e) => e.id === info.row.getValue("id")) &&
+    //             window.confirm("Are you to sure to delete ? ")
+    //           )
+    //             setTasks(tasks.filter((each) => each.id !== id));
+    //         }}
+    //       >
+    //         <AiFillDelete />
+    //       </button>
+    //     </div>
+    //   ),
+    // }),
+  ];
 
   const [task, setTask] = useState(defaultValue);
 
@@ -121,8 +159,8 @@ export default function Tasks() {
         tasks.map((t) =>
           t.id === task.id
             ? {
-                ...task,
-              }
+              ...task,
+            }
             : t
         )
       );
@@ -132,7 +170,7 @@ export default function Tasks() {
         {
           id: tasks[tasks.length - 1] ? tasks[tasks.length - 1]?.id + 1 : 1,
           checkStatus: false,
-          date: new Date(),
+          // date: new Date(),
           task: task.task,
           description: task.description,
           status: "ON-GOING",
@@ -158,96 +196,96 @@ export default function Tasks() {
   }, [tasks]);
 
   const handleSortTaskValue = async () => {
-    if(!sortOrder){
+    if (!sortOrder) {
       let taskAscOrder = await [...tasks].sort((a, b) => a.id - b.id);
       await setTasks(taskAscOrder);
-    }else{
+    } else {
       let taskAscOrder = await [...tasks].sort((a, b) => b.id - a.id);
       await setTasks(taskAscOrder);
     }
   }
 
-  const addTaskModelPopUp = () => { 
+  const addTaskModelPopUp = () => {
     return (
       <div className="fixed inset-0 bg-black z-50 bg-opacity-75 flex justify-center items-center text-white">
         <form
-            onSubmit={addTask}
-            className="border-2 border-zinc-800 flex flex-col bg-zinc-800 rounded-md overflow-hidden w-[50vw] h-[80vh]"
-          >
-            <div className="flex items-center justify-between px-4 py-4 bg-zinc-900">
-              <div className="flex items-center">
-                <h1 className="font-bold">Add new Task</h1>
-              </div>
-              <button>
-                <AiFillCloseCircle
-                  onClick={() => {
-                    setShowPopUp(false);
-                  }}
-                  className="text-2xl"
-                />
+          onSubmit={addTask}
+          className="border-2 border-black flex flex-col bg-white rounded-md overflow-hidden w-[50vw] h-[80vh]"
+        >
+          <div className="flex items-center justify-between px-4 py-4 bg-white">
+            <div className="flex items-center text-black">
+              <h1 className="font-bold">Add new Task</h1>
+            </div>
+            <button>
+              <AiFillCloseCircle
+                onClick={() => {
+                  setShowPopUp(false);
+                }}
+                className="text-2xl text-black"
+              />
+            </button>
+          </div>
+          <div className="flex flex-col text-black flex-1 w-80 p-3 text-sm px-5">
+            <p className="self-start">Enter Task Name : </p>
+            <input
+              onChange={(e) => handleOnChange(e)}
+              value={task.task}
+              className=" rounded-md px-3 py-2 mt-2 text-black border border-black"
+              placeholder="Task Name."
+              type="text"
+              name="task"
+              id=""
+              autoFocus
+            />
+            <p className="mt-4 self-start">Enter Description : </p>
+            <textarea
+              onChange={(e) => handleOnChange(e)}
+              value={task.description}
+              rows={5}
+              className="rounded-md px-3 py-2 mt-2 text-black border border-black"
+              placeholder="Description."
+              type="text"
+              name="description"
+              id=""
+            />
+            <p className="mt-4 self-start">Developed by : </p>
+            <input
+              onChange={(e) => handleOnChange(e)}
+              value={task.developedBy}
+              className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black border border-black"
+              placeholder="Task Name."
+              type="text"
+              name="developedBy"
+              id=""
+            />
+            <p className="mt-4 self-start">Assignee : </p>
+            <input
+              onChange={(e) => handleOnChange(e)}
+              value={task.assignee}
+              className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black border border-black"
+              placeholder="Task Name."
+              type="text"
+              name="assignee"
+              id=""
+            />
+            <div className="flex justify-end items-center">
+              <button className="bg-black font-bold mt-3 rounded-full py-2 text-white px-3 text-xs rounder-black">
+                Add
               </button>
             </div>
-            <div className="flex flex-col flex-1 w-80 p-3 text-sm px-5">
-              <p className="self-start">Enter Task Name : </p>
-              <input
-                onChange={(e) => handleOnChange(e)}
-                value={task.task}
-                className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black" 
-                placeholder="Task Name."
-                type="text"
-                name="task"
-                id=""
-                autoFocus
-              />
-              <p className="mt-4 self-start">Enter Description : </p>
-              <textarea
-                onChange={(e) => handleOnChange(e)}
-                value={task.description}
-                rows={5}
-                className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black"
-                placeholder="Description."
-                type="text"
-                name="description"
-                id=""
-              />
-              <p className="mt-4 self-start">Developed by : </p>
-              <input
-                onChange={(e) => handleOnChange(e)}
-                value={task.developedBy}
-                className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black"
-                placeholder="Task Name."
-                type="text"
-                name="developedBy"
-                id=""
-              />
-              <p className="mt-4 self-start">Assignee : </p>
-              <input
-                onChange={(e) => handleOnChange(e)}
-                value={task.assignee}
-                className="bg-zinc-900 rounded-md px-3 py-2 mt-2 text-black"
-                placeholder="Task Name."
-                type="text"
-                name="assignee"
-                id=""
-              />
-              <div className="flex justify-end items-center">
-                <button className="bg-white font-bold mt-3 rounded-full py-2 text-black px-3 text-xs">
-                  Add
-                </button>
-              </div>
-            </div>
-          </form>
+          </div>
+        </form>
       </div>
     )
   }
 
   const renderTableKeyValue = () => {
-    let FinalData = 
+    let FinalData =
       tasks
         // .map((e, i) => ({ ...e, id: i + 1 }))
         // .sort((a, b) => b.id - a.id)
         ?.map((e, i) => (
-           {
+          {
             id: e.id,
             description: e.description || "-",
             task: e.task,
@@ -255,20 +293,20 @@ export default function Tasks() {
             developedBy: e.developedBy,
             updatedBy: e.updatedBy,
             assignee: e.assignee,
-            date: format(new Date(e.date), "dd, MMM : hh:mm a")
-           }
+            // date: format(new Date(e.date), "dd, MMM : hh:mm a")
+          }
         ))
     return FinalData;
   }
 
-  const datas = useMemo(() => renderTableKeyValue(),[])
+  const datas = useMemo(() => renderTableKeyValue(), [])
 
-  console.log('custom!',renderTableKeyValue())
+  console.log('custom!', renderTableKeyValue())
 
   return (
     <div className="container mx-auto px-4">
-      { showPopUp && addTaskModelPopUp()}
-    <div className="mt-5 flex items-center w-full justify-between">
+      {showPopUp && addTaskModelPopUp()}
+      <div className="mt-5 flex items-center w-full justify-between">
         <div>
           <div className="flex items-center font-bold text-2xl text-white">
             <h1>Task Management</h1>
@@ -294,8 +332,8 @@ export default function Tasks() {
         </button>
       </div>
       <div className="bg-white grid-cols-none rounded-md overflow-hidden mt-5">
-        <Table columns={columns} data={datas} tasks={tasks} setTasks={setTasks} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} sorting={sorting} setSorting={setSorting}/>
-        
+        <Table columns={columns} datas={datas} />
+
       </div>
     </div>
   );
