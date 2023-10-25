@@ -9,7 +9,7 @@ body {
   &__container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 15px;
+    grid-gap: 30px;
     margin: 10px;
   }
 
@@ -30,7 +30,7 @@ body {
   }
 
   &__image {
-    width: 260px;
+    width: 100vw;
     height: 230px;
     padding: 5px;
     border-radius: 10px;

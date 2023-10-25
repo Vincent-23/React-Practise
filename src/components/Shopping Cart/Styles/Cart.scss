@@ -50,6 +50,10 @@ body {
         height: 80px;
     }
 
+    &_delete-btn:hover {
+        color: red;
+    }
+
     &_no-data {
         color: white;
         font-size: 30px;

@@ -53,17 +53,17 @@ const handleLoanAmountChange = (e) => {
             </div>
 
             <div className={`${baseCls}__item`}>
-                <label>{CALCULATOR_LOAN_AMOUNT}{' '}</label><br/>
+                <label className={`${baseCls}__label`}>{CALCULATOR_LOAN_AMOUNT}{' '}</label><br/>
                 <input className={`${baseCls}_input-field`} value ={loanAmount} id='loanAmt' onChange={handleLoanAmountChange}/>
             </div>
 
             <div className={`${baseCls}__item`}>
-                <label>{CALCULATOR_MONTHLY_INTEREST_RATE}{' '}</label><br/>
+                <label className={`${baseCls}__label`}>{CALCULATOR_MONTHLY_INTEREST_RATE}{' '}</label><br/>
                 <input className={`${baseCls}_input-field`} value={monthlyInterestRate} onChange={(e) => setMonthlyInterestRate(e.target.value)}/>
             </div>
 
             <div className={`${baseCls}__item`}>
-                <label>{CALCULATOR_TENURE}{' '}</label><br/>
+                <label className={`${baseCls}__label`}>{CALCULATOR_TENURE}{' '}</label><br/>
                 <input className={`${baseCls}_input-field`} value={tenure} onChange={(e) => setTenure(e.target.value)}/>
             </div>
 

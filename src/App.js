@@ -17,20 +17,23 @@ import Product from './components/Shopping Cart/Product';
 import ProductDetails from './components/Shopping Cart/ProductDetails';
 import Cart from './components/Shopping Cart/Cart';
 import Tasks from './components/Task Tracker/Tasks';
+import FavTask from './components/Task Tracker/FavTask';
 
 function App() {
   const [emi, setEmi] = useState(0);
   const [errorText, setErrorText] = useState("");
   const [productData, setProductData] = useState([]);
+  const [pageNavigate, setPageNavigate] = useState(false);
   const {breadcrumb, setBreadCrumb} = useContext(MyContext);
   return (
     <div className="App">
-      <MyContext.Provider value={{emi, setEmi, errorText, setErrorText,breadcrumb, setBreadCrumb, productData, setProductData}}>
+      <MyContext.Provider value={{emi, setEmi, errorText, setErrorText,breadcrumb, setBreadCrumb, productData, setProductData, pageNavigate, setPageNavigate}}>
        <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/" element={<HomeComponent />} />
             <Route path="task/*" element={<Tasks />} />
+            <Route path="favtasks/*" element={<FavTask />} />
             <Route path="emicalculator/*" element={<EmiCalculator />} />
             <Route path="videogallery/*" element={<VideoGallery />} />
             <Route path="/:id" element={<VideoGallery />} />

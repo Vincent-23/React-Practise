@@ -1,61 +1,68 @@
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.product_detail{
+
+  &_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap:20px;
   }
 
-  .product_detail{
+  &_image {
+    height: 400px;
+    width: 500px;
 
-    &_container {
-      display: grid;
-      grid-template-columns: auto auto auto;
-      gap:20px;
+  }
+
+  &_title {
+    font-size: 30px;
+  }
+
+  &_text {
+    font-size: 20px;
+  }
+
+  &_item {
+    height: 400px;
+    padding: 20px;
+    color: white;
+
+    &_details, &_back-btn {
+      text-align: left;
     }
 
     &_image {
-      height: 400px;
       width: 500px;
-
-    }
-
-    &_item {
-      height: 400px;
-      padding: 20px;
-      color: white;
-
-      &_details, &_back-btn {
-        text-align: left;
-      }
-
-      &_image {
-        width: 500px;
-        height: 100px;
-        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
-      }
-    }
-
-    &_add-btn {
-      width: 150px;
-      height: 50px;
-      background-color: orange;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: large;
-      margin-top: 10px;
-      &:hover{
-        background-color: white;
-        color: orange;
-        border: 1px solid orange;
-      }
-    }
-
-    &_back-btn{
-      color: white;
-      padding-right: 30px;
-      font-size: 30px;
+      height: 100px;
+      box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
     }
   }
 
-  
-  
-  
+  &_add-btn {
+    width: 150px;
+    height: 50px;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: large;
+    margin-top: 10px;
+    &:hover{
+      background-color: white;
+      color: orange;
+      border: 1px solid orange;
+    }
+  }
+
+  &_back-btn{
+    color: white;
+    padding-right: 30px;
+    font-size: 30px;
+  }
+}
+
+
+
